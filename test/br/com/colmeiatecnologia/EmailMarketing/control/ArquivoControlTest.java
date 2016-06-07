@@ -64,10 +64,6 @@ public class ArquivoControlTest {
         }
     }
     
-    @After
-    public void finalizaTeste() {
-    }
-    
     @Test(expected=RuntimeException.class)
     public void testaContrutorArquivoNull()
     {

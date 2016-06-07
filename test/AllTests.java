@@ -4,10 +4,8 @@
  * and open the template in the editor.
  */
 
-package br.com.colmeiatecnologia.EmailMarketing.control;
-
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
+import br.com.colmeiatecnologia.EmailMarketing.control.ArquivoControlTest;
+import br.com.colmeiatecnologia.EmailMarketing.model.EmailModelTest;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
@@ -18,7 +16,8 @@ import org.junit.runners.Suite;
  */
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
-                        ArquivoControlTest.class
+                        ArquivoControlTest.class,
+                        EmailModelTest.class
                     })
 public class AllTests {
 }
