@@ -5,6 +5,9 @@
  */
 package br.com.colmeiatecnologia.EmailMarketing;
 
+import br.com.colmeiatecnologia.EmailMarketing.control.view.ControladorLookAndFeel;
+import br.com.colmeiatecnologia.EmailMarketing.view.Principal;
+
 /**
  *
  * @author Rogerio Eduardo Pereira
@@ -17,7 +20,8 @@ public class EmailMarketing
      */
     public static void main(String[] args)
     {
-        // TODO code application logic here
+        ControladorLookAndFeel.setLookAndFeel();
+        new Principal().setVisible(true);
     }
     
 }
