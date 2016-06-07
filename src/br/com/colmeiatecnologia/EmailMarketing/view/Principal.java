@@ -7,8 +7,10 @@
 package br.com.colmeiatecnologia.EmailMarketing.view;
 
 
+import br.com.colmeiatecnologia.EmailMarketing.EmailMarketing;
 import br.com.colmeiatecnologia.EmailMarketing.control.ArquivoControl;
 import br.com.colmeiatecnologia.EmailMarketing.control.view.TextAreaControl;
+import br.com.colmeiatecnologia.EmailMarketing.model.EmailModel;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.event.ContainerEvent;
@@ -459,8 +461,18 @@ public class Principal extends javax.swing.JFrame {
     {//GEN-HEADEREND:event_botaoProcurarDestinatariosActionPerformed
         conteudoArquivo = new ArrayList<String>();
         conteudoArquivo = buscaArquivo(txtFilter);
-        TextAreaControl.insereConteudo(textoDestinatarios, conteudoArquivo);
-        textoTotalDestinatarios.setText(String.valueOf(textoDestinatarios.getLineCount()));
+       
+        ArrayList<String> emailsvalidos = new ArrayList<String>();
+        
+        for(String email: conteudoArquivo)
+        {
+            if(new EmailModel(email).validaEmail())
+                emailsvalidos.add(email.trim().toLowerCase());
+        }
+        
+        TextAreaControl.insereConteudo(textoDestinatarios, emailsvalidos);
+        
+        textoTotalDestinatarios.setText(String.valueOf(textoDestinatarios.getLineCount()-1));
     }//GEN-LAST:event_botaoProcurarDestinatariosActionPerformed
 
     private void botaoProcurarMensagemActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_botaoProcurarMensagemActionPerformed
@@ -588,8 +600,8 @@ public class Principal extends javax.swing.JFrame {
     private javax.swing.JTextField textoTotalSucesso;
     private javax.swing.JTextField textoUsuario;
     // End of variables declaration//GEN-END:variables
-    FileNameExtensionFilter txtFilter   = new FileNameExtensionFilter("TXT Files (*.txt)", "txt");
-    FileNameExtensionFilter htmlFilter  = new FileNameExtensionFilter("HTML Files (*.html)", "html");
+    private FileNameExtensionFilter txtFilter   = new FileNameExtensionFilter("TXT Files (*.txt)", "txt");
+    private FileNameExtensionFilter htmlFilter  = new FileNameExtensionFilter("HTML Files (*.html)", "html");
     
-    ArrayList<String> conteudoArquivo;
+    private ArrayList<String> conteudoArquivo;
 }
