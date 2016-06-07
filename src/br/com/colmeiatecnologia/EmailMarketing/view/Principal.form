@@ -365,6 +365,9 @@
               <Dimension value="[150, 32]"/>
             </Property>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="botaoProcurarMensagemActionPerformed"/>
+          </Events>
         </Component>
       </SubComponents>
     </Container>

@@ -7,12 +7,21 @@
 package br.com.colmeiatecnologia.EmailMarketing.view;
 
 
+import br.com.colmeiatecnologia.EmailMarketing.control.ArquivoControl;
+import br.com.colmeiatecnologia.EmailMarketing.control.view.TextAreaControl;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.event.ContainerEvent;
 import java.awt.event.ContainerListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.ArrayList;
+import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
+import javax.swing.JTextArea;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 /**
  *
@@ -230,6 +239,13 @@ public class Principal extends javax.swing.JFrame {
         botaoProcurarMensagem.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/com/colmeiatecnologia/EmailMarketing/view/img/zoom.png"))); // NOI18N
         botaoProcurarMensagem.setText("Procurar");
         botaoProcurarMensagem.setPreferredSize(new java.awt.Dimension(150, 32));
+        botaoProcurarMensagem.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
+                botaoProcurarMensagemActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout painelDadosRemetenteLayout = new javax.swing.GroupLayout(painelDadosRemetente);
         painelDadosRemetente.setLayout(painelDadosRemetenteLayout);
@@ -441,9 +457,60 @@ public class Principal extends javax.swing.JFrame {
 
     private void botaoProcurarDestinatariosActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_botaoProcurarDestinatariosActionPerformed
     {//GEN-HEADEREND:event_botaoProcurarDestinatariosActionPerformed
-        // TODO add your handling code here:
+        conteudoArquivo = new ArrayList<String>();
+        conteudoArquivo = buscaArquivo(txtFilter);
+        TextAreaControl.insereConteudo(textoDestinatarios, conteudoArquivo);
+        textoTotalDestinatarios.setText(String.valueOf(textoDestinatarios.getLineCount()));
     }//GEN-LAST:event_botaoProcurarDestinatariosActionPerformed
 
+    private void botaoProcurarMensagemActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_botaoProcurarMensagemActionPerformed
+    {//GEN-HEADEREND:event_botaoProcurarMensagemActionPerformed
+        conteudoArquivo = new ArrayList<String>();
+        conteudoArquivo = buscaArquivo(htmlFilter);
+        TextAreaControl.insereConteudo(textoMensagem, conteudoArquivo);
+    }//GEN-LAST:event_botaoProcurarMensagemActionPerformed
+
+    /**
+     * Le os dados do arquivo
+     * @param filtro
+     * @return ArrayList<String> contendo cada linha do arquivo
+     */
+    private ArrayList<String> buscaArquivo(FileNameExtensionFilter filtro)
+    {
+        try {
+            buscaArquivo.setVisible(true);
+            buscaArquivo.setFileFilter(filtro);
+
+            int result = buscaArquivo.showOpenDialog(null); 
+
+            if(result == JFileChooser.OPEN_DIALOG)
+                return new ArquivoControl(buscaArquivo.getSelectedFile().toString()).getConteudoArquivoTexto();
+        }
+        catch (FileNotFoundException e) {
+            JOptionPane.showMessageDialog(  
+                                            this, 
+                                            "Arquivo não encontrado"+
+                                            "\nErro: "+e.getMessage()+
+                                            "\nCausa: "+e.getCause(), 
+                                            "Erro!", 
+                                            JOptionPane.ERROR_MESSAGE
+                                        );
+            return null;
+        }
+        catch (IOException e) {
+            JOptionPane.showMessageDialog(  
+                                            this, 
+                                            "Erro ao ler o arquivo"+
+                                            "\nErro: "+e.getMessage()+
+                                            "\nCausa: "+e.getCause(), 
+                                            "Erro!", 
+                                            JOptionPane.ERROR_MESSAGE
+                                        );
+            return null;
+        }
+        return null;
+    }
+    
     /**
      * @param args the command line arguments
      */
@@ -521,5 +588,8 @@ public class Principal extends javax.swing.JFrame {
     private javax.swing.JTextField textoTotalSucesso;
     private javax.swing.JTextField textoUsuario;
     // End of variables declaration//GEN-END:variables
-
+    FileNameExtensionFilter txtFilter   = new FileNameExtensionFilter("TXT Files (*.txt)", "txt");
+    FileNameExtensionFilter htmlFilter  = new FileNameExtensionFilter("HTML Files (*.html)", "html");
+    
+    ArrayList<String> conteudoArquivo;
 }
