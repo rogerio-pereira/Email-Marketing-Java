@@ -15,11 +15,27 @@ import java.util.regex.Pattern;
  * @version 1.0
  */
 public class EmailModel {
-    private static String email;
+    private static  String email;
+    private         String nome;
     
     public EmailModel(String email)
     {
         this.email = email.trim().toLowerCase();
+    }
+    
+    public EmailModel(String email, String nome)
+    {
+        this.email  = email.trim().toLowerCase();
+        this.nome   = nome;
+    }
+    public String getEmail()
+    {
+        return email;
+    }
+
+    public String getNome()
+    {
+        return nome;
     }
     
     public static boolean validaEmail()
