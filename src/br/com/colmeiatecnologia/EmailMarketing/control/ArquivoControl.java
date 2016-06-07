@@ -7,9 +7,11 @@
 package br.com.colmeiatecnologia.EmailMarketing.control;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.LineNumberReader;
 import java.util.ArrayList;
 
 /**
@@ -18,8 +20,11 @@ import java.util.ArrayList;
  * @version 1.0
  */
 public class ArquivoControl {
-    FileReader arquivo;
-    BufferedReader lerArquivo;
+    File                file;
+    
+    FileReader          fileReader;
+    BufferedReader      lerArquivo;
+    LineNumberReader    linhaLeitura;
     
     /**
      * Construtor da class
@@ -29,8 +34,9 @@ public class ArquivoControl {
      */
     public ArquivoControl(String nomeArquivo) throws FileNotFoundException, IOException
     {
-        arquivo     = new FileReader(nomeArquivo);
-        lerArquivo  = new BufferedReader(arquivo);
+        fileReader      = new FileReader(nomeArquivo);
+        file            = new File(nomeArquivo);
+        lerArquivo      = new BufferedReader(fileReader);
     }
     
     /**
@@ -50,5 +56,18 @@ public class ArquivoControl {
         }
         
         return conteudoArquivo;
+    }
+    
+    /**
+     * Obtém o número de linhas de um arquivo
+     * @return Numero de linhas do arquivo
+     * @throws IOException 
+     */
+    public int getNumeroLinhas() throws IOException
+    {
+        linhaLeitura    = new LineNumberReader(new FileReader(file));
+        linhaLeitura.skip(file.length());
+        
+        return linhaLeitura.getLineNumber();
     }
 }
