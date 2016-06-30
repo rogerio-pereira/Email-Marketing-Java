@@ -6,9 +6,6 @@
 
 package br.com.colmeiatecnologia.EmailMarketing.model.email;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import org.apache.commons.mail.EmailException;
 import org.apache.commons.mail.SimpleEmail;
 
 /**
@@ -16,13 +13,9 @@ import org.apache.commons.mail.SimpleEmail;
  * @author Rogério Eduardo Pereira <rogerio@groupsofter.com.br>
  * @version 1.0
  */
-public class SendSimpleMail extends SendMail{
-    SimpleEmail email = new SimpleEmail();
-    
-    @Override
-    public void setMensagem(String mensagem) throws EmailException
+public class EnviaEmailSimplesModel extends EnviaEmailModel{
+    public EnviaEmailSimplesModel()
     {
-        email.setMsg(mensagem);
+        this.email = new SimpleEmail();
     }
-    
 }

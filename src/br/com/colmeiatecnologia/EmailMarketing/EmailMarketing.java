@@ -14,7 +14,6 @@ import br.com.colmeiatecnologia.EmailMarketing.view.Principal;
  */
 public class EmailMarketing
 {
-
     /**
      * @param args the command line arguments
      */

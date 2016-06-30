@@ -7,10 +7,10 @@
 package br.com.colmeiatecnologia.EmailMarketing.view;
 
 
-import br.com.colmeiatecnologia.EmailMarketing.EmailMarketing;
 import br.com.colmeiatecnologia.EmailMarketing.control.ArquivoControl;
 import br.com.colmeiatecnologia.EmailMarketing.control.view.TextAreaControl;
 import br.com.colmeiatecnologia.EmailMarketing.model.EmailModel;
+import br.com.colmeiatecnologia.EmailMarketing.model.ThreadTimerModel;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.event.ContainerEvent;
@@ -22,7 +22,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
-import javax.swing.JTextArea;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 /**
@@ -100,7 +99,7 @@ public class Principal extends javax.swing.JFrame {
         jLabel3 = new javax.swing.JLabel();
         textoHostSmtp = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
-        jCheckBox1 = new javax.swing.JCheckBox();
+        checkAutenticacao = new javax.swing.JCheckBox();
         jLabel5 = new javax.swing.JLabel();
         textoUsuario = new javax.swing.JTextField();
         jLabel6 = new javax.swing.JLabel();
@@ -118,16 +117,6 @@ public class Principal extends javax.swing.JFrame {
         botaoProcurarDestinatarios = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
         textoDestinatarios = new javax.swing.JTextArea();
-        painelEstatísticas = new javax.swing.JPanel();
-        jLabel9 = new javax.swing.JLabel();
-        textoTotalDestinatarios = new javax.swing.JTextField();
-        jLabel10 = new javax.swing.JLabel();
-        textoTotalSucesso = new javax.swing.JTextField();
-        jLabel11 = new javax.swing.JLabel();
-        textoTotalErros = new javax.swing.JTextField();
-        jLabel12 = new javax.swing.JLabel();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        textoEmailsComErro = new javax.swing.JTextArea();
         botaoIniciarEnvio = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -151,8 +140,8 @@ public class Principal extends javax.swing.JFrame {
 
         jLabel4.setText("Porta");
 
-        jCheckBox1.setSelected(true);
-        jCheckBox1.setText("Autenticação SSL");
+        checkAutenticacao.setSelected(true);
+        checkAutenticacao.setText("Autenticação SSL");
 
         jLabel5.setText("Usuário");
 
@@ -191,7 +180,7 @@ public class Principal extends javax.swing.JFrame {
                             .addComponent(textoUsuario, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                     .addGroup(painelConfiguracoesEmailLayout.createSequentialGroup()
                         .addGroup(painelConfiguracoesEmailLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jCheckBox1)
+                            .addComponent(checkAutenticacao)
                             .addGroup(painelConfiguracoesEmailLayout.createSequentialGroup()
                                 .addComponent(jLabel13)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -219,7 +208,7 @@ public class Principal extends javax.swing.JFrame {
                     .addComponent(jLabel4)
                     .addComponent(textoPorta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jCheckBox1)
+                .addComponent(checkAutenticacao)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(painelConfiguracoesEmailLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel13)
@@ -304,7 +293,7 @@ public class Principal extends javax.swing.JFrame {
                     .addComponent(jLabel8)
                     .addComponent(botaoProcurarMensagem, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(JScrollPane1))
+                .addComponent(JScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 185, Short.MAX_VALUE))
         );
 
         painelDestinatarios.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Destinatários", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.TOP));
@@ -322,8 +311,20 @@ public class Principal extends javax.swing.JFrame {
 
         textoDestinatarios.setColumns(20);
         textoDestinatarios.setLineWrap(true);
+        textoDestinatarios.setToolTipText("");
         textoDestinatarios.setWrapStyleWord(true);
         jScrollPane2.setViewportView(textoDestinatarios);
+
+        botaoIniciarEnvio.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/com/colmeiatecnologia/EmailMarketing/view/img/dialog-accept.png"))); // NOI18N
+        botaoIniciarEnvio.setText("Iniciar Envio");
+        botaoIniciarEnvio.setPreferredSize(new java.awt.Dimension(150, 32));
+        botaoIniciarEnvio.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
+                botaoIniciarEnvioActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout painelDestinatariosLayout = new javax.swing.GroupLayout(painelDestinatarios);
         painelDestinatarios.setLayout(painelDestinatariosLayout);
@@ -332,99 +333,25 @@ public class Principal extends javax.swing.JFrame {
             .addGroup(painelDestinatariosLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(painelDestinatariosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 305, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, painelDestinatariosLayout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(botaoProcurarDestinatarios, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jScrollPane2))
+                        .addComponent(botaoProcurarDestinatarios, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
+            .addGroup(painelDestinatariosLayout.createSequentialGroup()
+                .addGap(82, 82, 82)
+                .addComponent(botaoIniciarEnvio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         painelDestinatariosLayout.setVerticalGroup(
             painelDestinatariosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(painelDestinatariosLayout.createSequentialGroup()
                 .addComponent(botaoProcurarDestinatarios, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 237, javax.swing.GroupLayout.PREFERRED_SIZE))
-        );
-
-        painelEstatísticas.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Estatisticas", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.TOP));
-
-        jLabel9.setText("Destinatários");
-
-        textoTotalDestinatarios.setEditable(false);
-        textoTotalDestinatarios.setFocusable(false);
-        textoTotalDestinatarios.setPreferredSize(new java.awt.Dimension(14, 32));
-
-        jLabel10.setText("Sucesso");
-
-        textoTotalSucesso.setEditable(false);
-        textoTotalSucesso.setFocusable(false);
-        textoTotalSucesso.setPreferredSize(new java.awt.Dimension(80, 32));
-
-        jLabel11.setText("Erro");
-
-        textoTotalErros.setEditable(false);
-        textoTotalErros.setFocusable(false);
-        textoTotalErros.setPreferredSize(new java.awt.Dimension(14, 32));
-
-        jLabel12.setText("E-mails com erro");
-
-        textoEmailsComErro.setColumns(20);
-        textoEmailsComErro.setLineWrap(true);
-        textoEmailsComErro.setWrapStyleWord(true);
-        jScrollPane1.setViewportView(textoEmailsComErro);
-
-        botaoIniciarEnvio.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/com/colmeiatecnologia/EmailMarketing/view/img/dialog-accept.png"))); // NOI18N
-        botaoIniciarEnvio.setText("Iniciar Envio");
-        botaoIniciarEnvio.setPreferredSize(new java.awt.Dimension(150, 32));
-
-        javax.swing.GroupLayout painelEstatísticasLayout = new javax.swing.GroupLayout(painelEstatísticas);
-        painelEstatísticas.setLayout(painelEstatísticasLayout);
-        painelEstatísticasLayout.setHorizontalGroup(
-            painelEstatísticasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(painelEstatísticasLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(painelEstatísticasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1)
-                    .addGroup(painelEstatísticasLayout.createSequentialGroup()
-                        .addGroup(painelEstatísticasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel9)
-                            .addComponent(jLabel10)
-                            .addComponent(jLabel11))
-                        .addGap(18, 18, 18)
-                        .addGroup(painelEstatísticasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(textoTotalDestinatarios, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(textoTotalSucesso, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(textoTotalErros, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                    .addGroup(painelEstatísticasLayout.createSequentialGroup()
-                        .addGroup(painelEstatísticasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(painelEstatísticasLayout.createSequentialGroup()
-                                .addGap(115, 115, 115)
-                                .addComponent(botaoIniciarEnvio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jLabel12))
-                        .addGap(0, 40, Short.MAX_VALUE)))
-                .addContainerGap())
-        );
-        painelEstatísticasLayout.setVerticalGroup(
-            painelEstatísticasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(painelEstatísticasLayout.createSequentialGroup()
-                .addContainerGap()
+                .addComponent(jScrollPane2)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(botaoIniciarEnvio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(painelEstatísticasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel9)
-                    .addComponent(textoTotalDestinatarios, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(painelEstatísticasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel10)
-                    .addComponent(textoTotalSucesso, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(painelEstatísticasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel11)
-                    .addComponent(textoTotalErros, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel12)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 109, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -435,9 +362,7 @@ public class Principal extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(painelDadosRemetente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(painelDestinatarios, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(painelEstatísticas, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(painelDestinatarios, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -446,11 +371,7 @@ public class Principal extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(painelDadosRemetente, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(painelDestinatarios, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(painelEstatísticas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                    .addComponent(painelDestinatarios, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
 
@@ -466,13 +387,11 @@ public class Principal extends javax.swing.JFrame {
         
         for(String email: conteudoArquivo)
         {
-            if(new EmailModel(email).validaEmail())
+            if(EmailModel.validaEmail(email))
                 emailsvalidos.add(email.trim().toLowerCase());
         }
         
         TextAreaControl.insereConteudo(textoDestinatarios, emailsvalidos);
-        
-        textoTotalDestinatarios.setText(String.valueOf(textoDestinatarios.getLineCount()-1));
     }//GEN-LAST:event_botaoProcurarDestinatariosActionPerformed
 
     private void botaoProcurarMensagemActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_botaoProcurarMensagemActionPerformed
@@ -481,6 +400,32 @@ public class Principal extends javax.swing.JFrame {
         conteudoArquivo = buscaArquivo(htmlFilter);
         TextAreaControl.insereConteudo(textoMensagem, conteudoArquivo);
     }//GEN-LAST:event_botaoProcurarMensagemActionPerformed
+
+    private void botaoIniciarEnvioActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_botaoIniciarEnvioActionPerformed
+    {//GEN-HEADEREND:event_botaoIniciarEnvioActionPerformed
+        String                  remetenteNome   = textoNomeRemetente.getText();
+        String                  remetenteEmail  = textoEmailEnvio.getText();
+
+        String                  usuario         = textoUsuario.getText();
+        String                  senha           = textoSenha.getText();
+        String                  hostSmtp        = textoHostSmtp.getText();
+        String                  assunto         = textoAssunto.getText();
+        String                  mensagem        = textoMensagem.getText();
+        int                     porta           = Integer.parseInt(textoPorta.getText());
+        int                     maximoEnvio     = Integer.parseInt(textoMaximoEnvio.getText());
+        boolean                 autenticacao    = checkAutenticacao.isSelected();
+        EmailModel              remetente       = new EmailModel(remetenteEmail, remetenteNome);
+        ArrayList<EmailModel>   destinatarios   = new ArrayList<EmailModel>();
+
+        for(String email: textoDestinatarios.getText().split("\n"))
+        {
+            destinatarios.add(new EmailModel(email));
+        }
+        
+        limpaTela();
+
+        new ThreadTimerModel(usuario, senha, hostSmtp, assunto, mensagem, porta, maximoEnvio, autenticacao, remetente, destinatarios, this);
+    }//GEN-LAST:event_botaoIniciarEnvioActionPerformed
 
     /**
      * Le os dados do arquivo
@@ -521,6 +466,62 @@ public class Principal extends javax.swing.JFrame {
             return null;
         }
         return null;
+    }
+    
+    private void limpaTela()
+    {
+        textoNomeRemetente.setText("");
+        textoEmailEnvio.setText("");
+        textoUsuario.setText("");
+        textoSenha.setText("");
+        textoHostSmtp.setText("");
+        textoPorta.setText("");
+        checkAutenticacao.setSelected(true);
+        textoMaximoEnvio.setText("");
+        textoAssunto.setText("");
+        textoMensagem.setText("");
+        textoDestinatarios.setText("");
+    }
+    
+    /**
+     * Seta valores nos campos e reenvia o email
+     * @param usuario
+     * @param senha
+     * @param hostSmtp
+     * @param assunto
+     * @param mensagem
+     * @param porta
+     * @param maximoEnvio
+     * @param autenticacao
+     * @param remetente
+     * @param destinatarios 
+     */
+    public void reenvia (
+                            String usuario, 
+                            String senha, 
+                            String hostSmtp, 
+                            String assunto, 
+                            String mensagem, 
+                            int porta, 
+                            int maximoEnvio, 
+                            boolean autenticacao, 
+                            EmailModel remetente, 
+                            String destinatarios
+                        )
+    {
+        this.textoUsuario.setText(usuario);
+        this.textoSenha.setText(senha);
+        this.textoHostSmtp.setText(hostSmtp);
+        this.textoAssunto.setText(assunto);
+        this.textoMensagem.setText(mensagem);
+        this.textoPorta.setText(String.valueOf(porta));
+        this.textoMaximoEnvio.setText(String.valueOf(maximoEnvio));
+        this.checkAutenticacao.setSelected(autenticacao);
+        this.textoNomeRemetente.setText(remetente.getNome());
+        this.textoEmailEnvio.setText(remetente.getEmail());
+        this.textoDestinatarios.setText(destinatarios);
+        
+        botaoIniciarEnvio.doClick();
     }
     
     /**
@@ -565,11 +566,8 @@ public class Principal extends javax.swing.JFrame {
     private javax.swing.JButton botaoProcurarDestinatarios;
     private javax.swing.JButton botaoProcurarMensagem;
     private javax.swing.JFileChooser buscaArquivo;
-    private javax.swing.JCheckBox jCheckBox1;
+    private javax.swing.JCheckBox checkAutenticacao;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel10;
-    private javax.swing.JLabel jLabel11;
-    private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -578,26 +576,19 @@ public class Principal extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
-    private javax.swing.JLabel jLabel9;
-    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JPanel painelConfiguracoesEmail;
     private javax.swing.JPanel painelDadosRemetente;
     private javax.swing.JPanel painelDestinatarios;
-    private javax.swing.JPanel painelEstatísticas;
     private javax.swing.JTextField textoAssunto;
     private javax.swing.JTextArea textoDestinatarios;
     private javax.swing.JTextField textoEmailEnvio;
-    private javax.swing.JTextArea textoEmailsComErro;
     private javax.swing.JTextField textoHostSmtp;
     private javax.swing.JTextField textoMaximoEnvio;
     private javax.swing.JTextArea textoMensagem;
     private javax.swing.JTextField textoNomeRemetente;
     private javax.swing.JTextField textoPorta;
     private javax.swing.JTextField textoSenha;
-    private javax.swing.JTextField textoTotalDestinatarios;
-    private javax.swing.JTextField textoTotalErros;
-    private javax.swing.JTextField textoTotalSucesso;
     private javax.swing.JTextField textoUsuario;
     // End of variables declaration//GEN-END:variables
     private FileNameExtensionFilter txtFilter   = new FileNameExtensionFilter("TXT Files (*.txt)", "txt");

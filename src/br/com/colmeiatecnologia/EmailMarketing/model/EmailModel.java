@@ -15,8 +15,8 @@ import java.util.regex.Pattern;
  * @version 1.0
  */
 public class EmailModel {
-    private static  String email;
-    private         String nome;
+    private String email;
+    private String nome;
     
     public EmailModel(String email)
     {
@@ -38,10 +38,10 @@ public class EmailModel {
         return nome;
     }
     
-    public static boolean validaEmail()
+    public static boolean validaEmail(String em)
     {       
         Pattern p = Pattern.compile("^[\\w-]+(\\.[\\w-]+)*@([\\w-]+\\.)+[a-zA-Z]{2,7}$"); 
-		Matcher m = p.matcher(email); 
+		Matcher m = p.matcher(em); 
         
 		if (m.find())
             return true;

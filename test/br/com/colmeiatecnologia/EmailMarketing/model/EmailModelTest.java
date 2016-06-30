@@ -20,65 +20,49 @@ public class EmailModelTest {
     
     @Test
     public void validaEmailVazio()
-    {
-        email = new EmailModel("");
-        
-        assertEquals(false, email.validaEmail());
+    {        
+        assertEquals(false, email.validaEmail(""));
     }
 
     @Test
     public void validaEmailSemArroba()
     {
-        email = new EmailModel("teste");
-        
-        assertEquals(false, email.validaEmail());
+        assertEquals(false, email.validaEmail("teste"));
     }
 
     @Test
     public void validaEmailComArroba()
     {
-        email = new EmailModel("teste@");
-        
-        assertEquals(false, email.validaEmail());
+        assertEquals(false, email.validaEmail("teste@"));
     }
 
     @Test
     public void validaEmailComDominio()
     {
-        email = new EmailModel("teste@teste");
-        
-        assertEquals(false, email.validaEmail());
+        assertEquals(false, email.validaEmail("teste@teste"));
     }
 
     @Test
     public void validaEmailComCategoriaDominio()
     {
-        email = new EmailModel("teste@teste.com");
-        
-        assertEquals(true, email.validaEmail());
+        assertEquals(true, email.validaEmail("teste@teste.com"));
     }
     
     @Test
     public void validaEmailComCategoriaDominio2()
     {
-        email = new EmailModel("teste@teste.comm");
-        
-        assertEquals(true, email.validaEmail());
+        assertEquals(true, email.validaEmail("teste@teste.comm"));
     }
     
     @Test
     public void validaEmailComCategoriaELocalidade()
     {
-        email = new EmailModel("teste@teste.com.br");
-        
-        assertEquals(true, email.validaEmail());
+        assertEquals(true, email.validaEmail("teste@teste.com.br"));
     }
     
     @Test
     public void validaEmailComCategoria2ELocalidade()
     {
-        email = new EmailModel("teste@teste.org.brdsa");
-        
-        assertEquals(true, email.validaEmail());
+        assertEquals(true, email.validaEmail("teste@teste.org.brdsa"));
     }
 }

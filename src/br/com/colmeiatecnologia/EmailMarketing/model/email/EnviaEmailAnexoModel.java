@@ -15,23 +15,20 @@ import org.apache.commons.mail.MultiPartEmail;
  * @author Rogério Eduardo Pereira <rogerio@groupsofter.com.br>
  * @version 1.0
  */
-public class SendAttachmentEmail extends SendMail{
-    MultiPartEmail email = new MultiPartEmail();
-    
-    @Override
-    public void setMensagem(String mensagem) throws EmailException
+public class EnviaEmailAnexoModel extends EnviaEmailSimplesModel{    
+    public EnviaEmailAnexoModel()
     {
-        email.setMsg(mensagem);
+        this.email = new MultiPartEmail();
     }
-
-    public void adicionaAnexo(String arquivo, String descricao, String nome) throws EmailException
+    
+    public void anexar(String caminho, String descricao, String nome) throws EmailException
     {
         EmailAttachment attachment = new EmailAttachment();
-        attachment.setPath(arquivo); //caminho da imagem
+        attachment.setPath(caminho);
         attachment.setDisposition(EmailAttachment.ATTACHMENT);
         attachment.setDescription(descricao);
         attachment.setName(nome);
         
-        email.attach(attachment);
+        MultiPartEmail.class.cast(email).attach(attachment);
     }
 }
