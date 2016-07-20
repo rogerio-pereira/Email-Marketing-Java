@@ -6,6 +6,7 @@
 
 package br.com.colmeiatecnologia.EmailMarketing.model;
 
+import br.com.colmeiatecnologia.EmailMarketing.model.dao.RemetenteDAO;
 import br.com.colmeiatecnologia.EmailMarketing.view.Principal;
 import java.util.ArrayList;
 import java.util.Timer;
@@ -19,49 +20,23 @@ import java.util.TimerTask;
 public class ThreadTimerModel
 {
     private Timer timer;
-    ArrayList<String> dest;
 
     /**
      * Construtor
-     * 
-     * @param usuario           Usuario do email
-     * @param senha             Senha do email
-     * @param hostSmtp          Host SMTP
-     * @param assunto           Assunto da Mensagem
-     * @param mensagem          Mensagem a ser enviada
-     * @param porta             Porta SMTP
-     * @param maximoEnvio       Número máximo de envios por hora
-     * @param autenticacao      Autenticação SSL
-     * @param remetente         Remetente do Email
-     * @param destinatarios     Lista de Destinatários
-     * @param janelaPrincipal   JanelaPrincipal
+     * @param remetente
+     * @param mensagem
+     * @param janelaPrincipal 
      */
     public ThreadTimerModel(
-                                String usuario, 
-                                String senha, 
-                                String hostSmtp, 
-                                String assunto, 
-                                String mensagem, 
-                                int porta, 
-                                int maximoEnvio, 
-                                boolean autenticacao, 
-                                EmailModel remetente, 
-                                ArrayList<EmailModel> destinatarios,
+                                RemetenteDAO remetente,
+                                MensagemModel mensagem,
                                 Principal janelaPrincipal
                             )
     {
         timer = new Timer();
         timer.scheduleAtFixedRate(new ThreadEnviaEmail  (
-                                                            usuario, 
-                                                            senha, 
-                                                            hostSmtp, 
-                                                            assunto, 
-                                                            mensagem, 
-                                                            porta, 
-                                                            maximoEnvio, 
-                                                            autenticacao, 
                                                             remetente, 
-                                                            destinatarios,
+                                                            mensagem,
                                                             janelaPrincipal
                                                         ), 0, 3600*1000);
     }

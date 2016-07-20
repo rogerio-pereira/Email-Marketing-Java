@@ -10,7 +10,9 @@ package br.com.colmeiatecnologia.EmailMarketing.view;
 import br.com.colmeiatecnologia.EmailMarketing.control.ArquivoControl;
 import br.com.colmeiatecnologia.EmailMarketing.control.view.TextAreaControl;
 import br.com.colmeiatecnologia.EmailMarketing.model.EmailModel;
+import br.com.colmeiatecnologia.EmailMarketing.model.MensagemModel;
 import br.com.colmeiatecnologia.EmailMarketing.model.ThreadTimerModel;
+import br.com.colmeiatecnologia.EmailMarketing.model.dao.RemetenteDAO;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.event.ContainerEvent;
@@ -403,28 +405,14 @@ public class Principal extends javax.swing.JFrame {
 
     private void botaoIniciarEnvioActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_botaoIniciarEnvioActionPerformed
     {//GEN-HEADEREND:event_botaoIniciarEnvioActionPerformed
-        String                  remetenteNome   = textoNomeRemetente.getText();
-        String                  remetenteEmail  = textoEmailEnvio.getText();
-
-        String                  usuario         = textoUsuario.getText();
-        String                  senha           = textoSenha.getText();
-        String                  hostSmtp        = textoHostSmtp.getText();
-        String                  assunto         = textoAssunto.getText();
-        String                  mensagem        = textoMensagem.getText();
-        int                     porta           = Integer.parseInt(textoPorta.getText());
-        int                     maximoEnvio     = Integer.parseInt(textoMaximoEnvio.getText());
-        boolean                 autenticacao    = checkAutenticacao.isSelected();
-        EmailModel              remetente       = new EmailModel(remetenteEmail, remetenteNome);
-        ArrayList<EmailModel>   destinatarios   = new ArrayList<EmailModel>();
-
-        for(String email: textoDestinatarios.getText().split("\n"))
-        {
-            destinatarios.add(new EmailModel(email));
-        }
+        RemetenteDAO remetente = obtemDadosRemetente();
+        remetente.setDestinatarios(obtemDestinatarios());
+        
+        MensagemModel mensagem = new MensagemModel(textoAssunto.getText(), textoMensagem.getText());
         
         limpaTela();
 
-        new ThreadTimerModel(usuario, senha, hostSmtp, assunto, mensagem, porta, maximoEnvio, autenticacao, remetente, destinatarios, this);
+        new ThreadTimerModel(remetente, mensagem, this);
     }//GEN-LAST:event_botaoIniciarEnvioActionPerformed
 
     /**
@@ -497,31 +485,62 @@ public class Principal extends javax.swing.JFrame {
      * @param destinatarios 
      */
     public void reenvia (
-                            String usuario, 
-                            String senha, 
-                            String hostSmtp, 
-                            String assunto, 
-                            String mensagem, 
-                            int porta, 
-                            int maximoEnvio, 
-                            boolean autenticacao, 
-                            EmailModel remetente, 
+                            RemetenteDAO remetente,
+                            MensagemModel mensagem,
                             String destinatarios
                         )
     {
-        this.textoUsuario.setText(usuario);
-        this.textoSenha.setText(senha);
-        this.textoHostSmtp.setText(hostSmtp);
-        this.textoAssunto.setText(assunto);
-        this.textoMensagem.setText(mensagem);
-        this.textoPorta.setText(String.valueOf(porta));
-        this.textoMaximoEnvio.setText(String.valueOf(maximoEnvio));
-        this.checkAutenticacao.setSelected(autenticacao);
-        this.textoNomeRemetente.setText(remetente.getNome());
-        this.textoEmailEnvio.setText(remetente.getEmail());
+        this.textoUsuario.setText(remetente.getUsuario());
+        this.textoSenha.setText(remetente.getSenha());
+        this.textoHostSmtp.setText(remetente.getHostSmtp());
+        this.textoPorta.setText(String.valueOf(remetente.getPortaSmtp()));
+        this.textoMaximoEnvio.setText(String.valueOf(remetente.getMaximoEnvio()));
+        this.checkAutenticacao.setSelected(remetente.getAutenticacao());
+        this.textoNomeRemetente.setText(remetente.getRemetente().getNome());
+        this.textoEmailEnvio.setText(remetente.getRemetente().getEmail());
+        
+        this.textoAssunto.setText(mensagem.getAssunto());
+        this.textoMensagem.setText(mensagem.getMensagem());
+        
         this.textoDestinatarios.setText(destinatarios);
         
         botaoIniciarEnvio.doClick();
+    }
+    
+    /**
+     * Obtem os dados do Remetente
+     * @return RemetenteDAO Dados do Remetente
+     */
+    private RemetenteDAO obtemDadosRemetente()
+    {
+        return new RemetenteDAO (
+                                    new EmailModel  (
+                                                        textoEmailEnvio.getText(), 
+                                                        textoNomeRemetente.getText()
+                                                    ), 
+                                    textoUsuario.getText(), 
+                                    textoSenha.getText(), 
+                                    textoHostSmtp.getText(), 
+                                    Integer.parseInt(textoPorta.getText()), 
+                                    Integer.parseInt(textoMaximoEnvio.getText()), 
+                                    checkAutenticacao.isSelected()
+                                );
+    }
+    
+    /**
+     * Obtém lista de destinatários
+     * @return ArrayList<EmailModel> lista de destinatários
+     */
+    private ArrayList<EmailModel> obtemDestinatarios()
+    {
+        ArrayList<EmailModel>   destinatarios   = new ArrayList<EmailModel>();
+
+        for(String email: textoDestinatarios.getText().split("\n"))
+        {
+            destinatarios.add(new EmailModel(email));
+        }
+        
+        return destinatarios;
     }
     
     /**

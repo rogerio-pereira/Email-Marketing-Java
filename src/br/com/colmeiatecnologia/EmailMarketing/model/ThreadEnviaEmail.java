@@ -6,6 +6,7 @@
 
 package br.com.colmeiatecnologia.EmailMarketing.model;
 
+import br.com.colmeiatecnologia.EmailMarketing.model.dao.RemetenteDAO;
 import br.com.colmeiatecnologia.EmailMarketing.model.email.EnviaEmailHtmlModel;
 import br.com.colmeiatecnologia.EmailMarketing.view.Estatisticas;
 import br.com.colmeiatecnologia.EmailMarketing.view.Principal;
@@ -21,66 +22,33 @@ import org.apache.commons.mail.EmailException;
  */
 public class ThreadEnviaEmail extends TimerTask
 {
-    private String                  usuario;
-    private String                  senha;
-    private String                  hostSmtp;
-    private String                  assunto;
-    private String                  mensagem;
-    private int                     porta;
-    private int                     maximoEnvio;
-    private boolean                 autenticacao;
-    private EmailModel              remetente;
-    private ArrayList<EmailModel>   destinatarios;
+    private RemetenteDAO        remetente;
+    private MensagemModel       mensagem;
     
-    private EnviaEmailHtmlModel     email;
+    private EnviaEmailHtmlModel email;
     
-    private int                     sucessos;
-    private int                     falhas;
-    private String                  emailsNaoEnviados;
+    private int                 sucessos;
+    private int                 falhas;
+    private String              emailsNaoEnviados;
     
-    private Estatisticas            estatisticas;
+    private Estatisticas        estatisticas;
     
-    private Principal               janelaPrincipal;
+    private Principal           janelaPrincipal;
     
     /**
      * Construtor
-     * 
-     * @param usuario           Usuario do email
-     * @param senha             Senha do email
-     * @param hostSmtp          Host SMTP
-     * @param assunto           Assunto da Mensagem
-     * @param mensagem          Mensagem a ser enviada
-     * @param porta             Porta SMTP
-     * @param maximoEnvio       Número máximo de envios por hora
-     * @param autenticacao      Autenticação SSL
-     * @param remetente         Remetente do Email
-     * @param destinatarios     Lista de Destinatários
-     * @param janelaPrincipal   JanelaPrincipal
+     * @param remetente
+     * @param mensagem
+     * @param janelaPrincipal 
      */
     public ThreadEnviaEmail (
-                                String usuario, 
-                                String senha, 
-                                String hostSmtp, 
-                                String assunto, 
-                                String mensagem, 
-                                int porta, 
-                                int maximoEnvio, 
-                                boolean autenticacao, 
-                                EmailModel remetente, 
-                                ArrayList<EmailModel> destinatarios,
+                                RemetenteDAO remetente,
+                                MensagemModel mensagem,
                                 Principal janelaPrincipal
                             )
     {
-        this.usuario            = usuario;
-        this.senha              = senha;
-        this.hostSmtp           = hostSmtp;
-        this.assunto            = assunto;
-        this.mensagem           = mensagem;
-        this.porta              = porta;
-        this.maximoEnvio        = maximoEnvio;
-        this.autenticacao       = autenticacao;
         this.remetente          = remetente;
-        this.destinatarios      = destinatarios;
+        this.mensagem           = mensagem;
         this.janelaPrincipal    = janelaPrincipal;
         
         this.sucessos           = 0;
@@ -89,9 +57,9 @@ public class ThreadEnviaEmail extends TimerTask
         
         estatisticas = new Estatisticas();
         estatisticas.setVisible(true);
-        estatisticas.setTotalDestinatarios(destinatarios.size());
-        estatisticas.setEmail(remetente.getEmail());
-        estatisticas.setAssunto(assunto);
+        estatisticas.setTotalDestinatarios(remetente.getDestinatarios().size());
+        estatisticas.setEmail(remetente.getRemetente().getEmail());
+        estatisticas.setAssunto(mensagem.getAssunto());
     }
     
     @Override
@@ -99,24 +67,26 @@ public class ThreadEnviaEmail extends TimerTask
     {
         int contadorEnvios = 0;
         
-        while(contadorEnvios<=maximoEnvio)
+        while(contadorEnvios <= remetente.getMaximoEnvio())
         {
-            while(!destinatarios.isEmpty())
+            while(!remetente.getDestinatarios().isEmpty())
             {
-                if(contadorEnvios >= maximoEnvio)
+                if(contadorEnvios >= remetente.getMaximoEnvio())
                     break;
                 
+                EmailModel remetenteAtual = (EmailModel)remetente.getDestinatarios().toArray()[0];
+                
                 try {
-                    enviaEmail(destinatarios.get(0));
+                    enviaEmail(remetenteAtual);
                     this.sucessos++;
                 }
                 catch (Exception e) {
                     this.falhas++;
-                    this.emailsNaoEnviados = emailsNaoEnviados+destinatarios.get(0).getEmail()+"\n";
+                    this.emailsNaoEnviados = emailsNaoEnviados+remetenteAtual.getEmail()+"\n";
                 }
                 
                 //Apaga destinatario atual da lista de destinatários
-                destinatarios.remove(destinatarios.get(0));
+                remetente.getDestinatarios().remove(remetente.getDestinatarios().toArray()[0]);
                 
                 estatisticas.atualizaTela(this.sucessos, this.falhas, this.emailsNaoEnviados);
 
@@ -126,7 +96,7 @@ public class ThreadEnviaEmail extends TimerTask
             contadorEnvios++;
         }
 
-        if(destinatarios.isEmpty())
+        if(remetente.getDestinatarios().isEmpty())
         {
             this.cancel();
             JOptionPane.showMessageDialog(
@@ -154,15 +124,8 @@ public class ThreadEnviaEmail extends TimerTask
                 if(n == 1)
                 {
                     janelaPrincipal.reenvia(
-                                                this.usuario, 
-                                                this.senha, 
-                                                this.hostSmtp, 
-                                                this.assunto, 
-                                                this.mensagem, 
-                                                this.porta, 
-                                                this.maximoEnvio, 
-                                                this.autenticacao, 
                                                 this.remetente, 
+                                                this.mensagem, 
                                                 this.emailsNaoEnviados
                                             );
                 }
@@ -179,14 +142,14 @@ public class ThreadEnviaEmail extends TimerTask
     public void enviaEmail(EmailModel destinatario) throws EmailException
     {
         email = new EnviaEmailHtmlModel();
-        email.setAssunto(assunto);
-        email.setAutenticacao(usuario, senha);
-        email.setHost(hostSmtp);
-        email.setPorta(porta);
-        email.setSSL(autenticacao);
-        email.setRemetente(remetente);
+        email.setAssunto(mensagem.getAssunto());
+        email.setAutenticacao(remetente.getUsuario(), remetente.getSenha());
+        email.setHost(remetente.getHostSmtp());
+        email.setPorta(remetente.getPortaSmtp());
+        email.setSSL(remetente.getAutenticacao());
+        email.setRemetente(remetente.getRemetente());
         email.adicionaDestinatario(new EmailModel(destinatario.getEmail()));
-        email.setMensagem(mensagem);
+        email.setMensagem(mensagem.getMensagem());
         email.envia();
     }
 }
