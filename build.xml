@@ -70,4 +70,12 @@
     nbproject/build-impl.xml file. 
 
     -->
+
+    <!--Configurações-->
+    <copy todir="config">
+        <fileset dir="src\config"/>
+    </copy>
+    <copy todir="dist\config">
+        <fileset dir="config"/>
+    </copy>
 </project>

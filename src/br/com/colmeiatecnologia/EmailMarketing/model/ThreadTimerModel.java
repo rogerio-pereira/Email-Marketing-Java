@@ -6,7 +6,7 @@
 
 package br.com.colmeiatecnologia.EmailMarketing.model;
 
-import br.com.colmeiatecnologia.EmailMarketing.model.dao.RemetenteDAO;
+import br.com.colmeiatecnologia.EmailMarketing.model.dao.RemetenteDadosDAO;
 import br.com.colmeiatecnologia.EmailMarketing.view.Principal;
 import java.util.ArrayList;
 import java.util.Timer;
@@ -28,7 +28,7 @@ public class ThreadTimerModel
      * @param janelaPrincipal 
      */
     public ThreadTimerModel(
-                                RemetenteDAO remetente,
+                                RemetenteDadosDAO remetente,
                                 MensagemModel mensagem,
                                 Principal janelaPrincipal
                             )

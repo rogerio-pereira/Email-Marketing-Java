@@ -12,9 +12,12 @@ import br.com.colmeiatecnologia.EmailMarketing.control.view.TextAreaControl;
 import br.com.colmeiatecnologia.EmailMarketing.model.EmailModel;
 import br.com.colmeiatecnologia.EmailMarketing.model.MensagemModel;
 import br.com.colmeiatecnologia.EmailMarketing.model.ThreadTimerModel;
+import br.com.colmeiatecnologia.EmailMarketing.model.dao.DestinatarioDAO;
 import br.com.colmeiatecnologia.EmailMarketing.model.dao.RemetenteDAO;
+import br.com.colmeiatecnologia.EmailMarketing.model.dao.RemetenteDadosDAO;
 import java.awt.Component;
 import java.awt.Container;
+import java.awt.Toolkit;
 import java.awt.event.ContainerEvent;
 import java.awt.event.ContainerListener;
 import java.awt.event.KeyEvent;
@@ -120,9 +123,13 @@ public class Principal extends javax.swing.JFrame {
         jScrollPane2 = new javax.swing.JScrollPane();
         textoDestinatarios = new javax.swing.JTextArea();
         botaoIniciarEnvio = new javax.swing.JButton();
+        jMenuBar1 = new javax.swing.JMenuBar();
+        menuCadastrar = new javax.swing.JMenu();
+        menuCadastrarRemetente = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Email Marketing");
+        setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/br/com/colmeiatecnologia/EmailMarketing/view/img/icone.png")));
 
         painelDadosRemetente.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Envio", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.TOP));
 
@@ -248,9 +255,6 @@ public class Principal extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(painelDadosRemetenteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(painelDadosRemetenteLayout.createSequentialGroup()
-                        .addComponent(JScrollPane1)
-                        .addContainerGap())
-                    .addGroup(painelDadosRemetenteLayout.createSequentialGroup()
                         .addGroup(painelDadosRemetenteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(painelConfiguracoesEmail, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addGroup(painelDadosRemetenteLayout.createSequentialGroup()
@@ -271,7 +275,10 @@ public class Principal extends javax.swing.JFrame {
                         .addGroup(painelDadosRemetenteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(botaoProcurarMensagem, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(textoAssunto, javax.swing.GroupLayout.PREFERRED_SIZE, 223, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(6, 6, 6))))
+                        .addGap(6, 6, 6))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, painelDadosRemetenteLayout.createSequentialGroup()
+                        .addComponent(JScrollPane1)
+                        .addContainerGap())))
         );
         painelDadosRemetenteLayout.setVerticalGroup(
             painelDadosRemetenteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -295,7 +302,8 @@ public class Principal extends javax.swing.JFrame {
                     .addComponent(jLabel8)
                     .addComponent(botaoProcurarMensagem, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(JScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 185, Short.MAX_VALUE))
+                .addComponent(JScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 158, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         painelDestinatarios.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Destinatários", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.TOP));
@@ -356,6 +364,22 @@ public class Principal extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
+        menuCadastrar.setText("Cadastrar");
+
+        menuCadastrarRemetente.setText("Remetente");
+        menuCadastrarRemetente.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
+                menuCadastrarRemetenteActionPerformed(evt);
+            }
+        });
+        menuCadastrar.add(menuCadastrarRemetente);
+
+        jMenuBar1.add(menuCadastrar);
+
+        setJMenuBar(jMenuBar1);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -405,7 +429,7 @@ public class Principal extends javax.swing.JFrame {
 
     private void botaoIniciarEnvioActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_botaoIniciarEnvioActionPerformed
     {//GEN-HEADEREND:event_botaoIniciarEnvioActionPerformed
-        RemetenteDAO remetente = obtemDadosRemetente();
+        RemetenteDadosDAO remetente = obtemDadosRemetente();
         remetente.setDestinatarios(obtemDestinatarios());
         
         MensagemModel mensagem = new MensagemModel(textoAssunto.getText(), textoMensagem.getText());
@@ -414,6 +438,11 @@ public class Principal extends javax.swing.JFrame {
 
         new ThreadTimerModel(remetente, mensagem, this);
     }//GEN-LAST:event_botaoIniciarEnvioActionPerformed
+
+    private void menuCadastrarRemetenteActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_menuCadastrarRemetenteActionPerformed
+    {//GEN-HEADEREND:event_menuCadastrarRemetenteActionPerformed
+        new SalvarRemetente().setVisible(true);
+    }//GEN-LAST:event_menuCadastrarRemetenteActionPerformed
 
     /**
      * Le os dados do arquivo
@@ -485,7 +514,7 @@ public class Principal extends javax.swing.JFrame {
      * @param destinatarios 
      */
     public void reenvia (
-                            RemetenteDAO remetente,
+                            RemetenteDadosDAO remetente,
                             MensagemModel mensagem,
                             String destinatarios
                         )
@@ -511,10 +540,10 @@ public class Principal extends javax.swing.JFrame {
      * Obtem os dados do Remetente
      * @return RemetenteDAO Dados do Remetente
      */
-    private RemetenteDAO obtemDadosRemetente()
+    private RemetenteDadosDAO obtemDadosRemetente()
     {
-        return new RemetenteDAO (
-                                    new EmailModel  (
+        return new RemetenteDadosDAO (
+                                    new RemetenteDAO  (
                                                         textoEmailEnvio.getText(), 
                                                         textoNomeRemetente.getText()
                                                     ), 
@@ -531,13 +560,13 @@ public class Principal extends javax.swing.JFrame {
      * Obtém lista de destinatários
      * @return ArrayList<EmailModel> lista de destinatários
      */
-    private ArrayList<EmailModel> obtemDestinatarios()
+    private ArrayList<DestinatarioDAO> obtemDestinatarios()
     {
-        ArrayList<EmailModel>   destinatarios   = new ArrayList<EmailModel>();
+        ArrayList<DestinatarioDAO> destinatarios   = new ArrayList<DestinatarioDAO>();
 
         for(String email: textoDestinatarios.getText().split("\n"))
         {
-            destinatarios.add(new EmailModel(email));
+            destinatarios.add(new DestinatarioDAO(email));
         }
         
         return destinatarios;
@@ -595,7 +624,10 @@ public class Principal extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
+    private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JMenu menuCadastrar;
+    private javax.swing.JMenuItem menuCadastrarRemetente;
     private javax.swing.JPanel painelConfiguracoesEmail;
     private javax.swing.JPanel painelDadosRemetente;
     private javax.swing.JPanel painelDestinatarios;

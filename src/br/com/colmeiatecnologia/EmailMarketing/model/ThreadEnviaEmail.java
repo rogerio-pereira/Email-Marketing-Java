@@ -6,7 +6,7 @@
 
 package br.com.colmeiatecnologia.EmailMarketing.model;
 
-import br.com.colmeiatecnologia.EmailMarketing.model.dao.RemetenteDAO;
+import br.com.colmeiatecnologia.EmailMarketing.model.dao.RemetenteDadosDAO;
 import br.com.colmeiatecnologia.EmailMarketing.model.email.EnviaEmailHtmlModel;
 import br.com.colmeiatecnologia.EmailMarketing.view.Estatisticas;
 import br.com.colmeiatecnologia.EmailMarketing.view.Principal;
@@ -22,7 +22,7 @@ import org.apache.commons.mail.EmailException;
  */
 public class ThreadEnviaEmail extends TimerTask
 {
-    private RemetenteDAO        remetente;
+    private RemetenteDadosDAO        remetente;
     private MensagemModel       mensagem;
     
     private EnviaEmailHtmlModel email;
@@ -42,7 +42,7 @@ public class ThreadEnviaEmail extends TimerTask
      * @param janelaPrincipal 
      */
     public ThreadEnviaEmail (
-                                RemetenteDAO remetente,
+                                RemetenteDadosDAO remetente,
                                 MensagemModel mensagem,
                                 Principal janelaPrincipal
                             )

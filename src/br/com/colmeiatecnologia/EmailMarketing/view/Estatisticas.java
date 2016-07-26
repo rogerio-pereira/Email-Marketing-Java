@@ -9,6 +9,7 @@ package br.com.colmeiatecnologia.EmailMarketing.view;
 
 import java.awt.Component;
 import java.awt.Container;
+import java.awt.Toolkit;
 import java.awt.event.ContainerEvent;
 import java.awt.event.ContainerListener;
 import java.awt.event.KeyEvent;
@@ -151,6 +152,7 @@ public class Estatisticas extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setTitle("Estatísticas do Envio");
+        setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/br/com/colmeiatecnologia/EmailMarketing/view/img/icone.png")));
 
         painelEstatísticas.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Estatisticas", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.TOP));
 

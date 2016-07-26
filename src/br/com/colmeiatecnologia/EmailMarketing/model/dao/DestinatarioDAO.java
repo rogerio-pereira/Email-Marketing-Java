@@ -18,18 +18,18 @@ import javax.persistence.Table;
  * @version 1.0
  */
 @Entity
-@Table(name = "remetenteEmail")
-public class RemetenteDAO extends EmailModel{
+@Table(name = "destinatarios")
+public class DestinatarioDAO extends EmailModel{
     @Id
     @GeneratedValue
     private Long codigo;
     
-    public RemetenteDAO(String email)
+    public DestinatarioDAO(String email)
     {
         super(email);
     }
     
-    public RemetenteDAO(String email, String nome)
+    public DestinatarioDAO(String email, String nome)
     {
         super(email, nome);
     }

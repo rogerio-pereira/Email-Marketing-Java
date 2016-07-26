@@ -26,7 +26,6 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
-import javax.swing.JOptionPane;
 
 /**
  * Controle referente a conexão ao banco de dados
@@ -41,62 +40,73 @@ public class Conexao
      * 
      * @return HashMap HashMap de Configurações
      */
-   public static HashMap getConfigBD()
+   public static HashMap getConfigBD() throws FileNotFoundException, IOException
    {
-        Map		cfg		= new HashMap();
+        Map         cfg         = new HashMap();
         Properties	prop		= new Properties();
-        InputStream     input		= null;
+        InputStream input		= null;
         String		show_sql	= new String();
         String		user		= new String();
         String		password	= new String();
         String		server		= new String();
         String		port		= new String();
         String		database	= new String();
+        
+        //Abre arquivo de configurações
+        input = new FileInputStream("config/bd_config.properties");
 
-        try
-        {
-            //Abre arquivo de configurações
-            input = new FileInputStream("config/bd_config.properties");
+        //Obtem as informações do arquivo
+        prop.load(input);
 
-            //Obtem as informações do arquivo
-            prop.load(input);
+        //Seta as propriedades
+        show_sql    = prop.getProperty("show_sql");
+        user        = prop.getProperty("user");
+        password    = prop.getProperty("password");
+        server      = prop.getProperty("server");
+        port        = prop.getProperty("port");
+        database    = prop.getProperty("database");
 
-            //Seta as propriedades
-            show_sql    = prop.getProperty("show_sql");
-            user        = prop.getProperty("user");
-            password    = prop.getProperty("password");
-            server      = prop.getProperty("server");
-            port        = prop.getProperty("port");
-            database    = prop.getProperty("database");
+        //Mapeia as propriedades
+        cfg.put("show_sql", show_sql);
+        cfg.put("user",     user);
+        cfg.put("password", password);
+        cfg.put("server",   server);
+        cfg.put("port",     port);
+        cfg.put("database", database);
+        cfg.put("url",      "jdbc:mysql://"+server+":"+port+"/"+database);
 
-            //Mapeia as propriedades
-            cfg.put("hibernate.show_sql",               show_sql);
-            cfg.put("javax.persistence.jdbc.user",      user);
-            cfg.put("javax.persistence.jdbc.password",  password);
-            cfg.put("javax.persistence.jdbc.url",       "jdbc:mysql://"+server+":"+port+"/"+database);
-        }
-        catch (IOException e)
-        {
-            new JOptionPane();
-            return null;
-        }
-        finally
-        {
-            if (input != null) 
-            {
-                try 
-                {
-                    input.close();
-                } 
-                catch (IOException e) 
-                {
-                    return null;
-                }
-            }
-        }
+        input.close();
 
         return (HashMap)cfg;
     }
+   
+    /**
+     * Obtem as configuracoes do Banco de dados
+     * 
+     * @return HashMap HashMap de Configurações
+     */
+   public static HashMap getConfigBDHibernate() throws IOException, FileNotFoundException
+   {
+       Map cfg          = getConfigBD();
+       Map cfgHibernate = new HashMap();
+       
+       
+       String show_sql  = cfg.get("show_sql").toString();
+       String user      = cfg.get("user").toString();
+       String password  = cfg.get("password").toString();
+       String server    = cfg.get("server").toString();
+       String port      = cfg.get("port").toString();
+       String database  = cfg.get("database").toString();
+       String url       = cfg.get("url").toString();
+       
+       //Mapeia as propriedades
+        cfgHibernate.put("hibernate.show_sql",               show_sql);
+        cfgHibernate.put("javax.persistence.jdbc.user",      user);
+        cfgHibernate.put("javax.persistence.jdbc.password",  password);
+        cfgHibernate.put("javax.persistence.jdbc.url",       url);
+        
+        return (HashMap)cfgHibernate;
+   }
 
    /**
     * Cria uma conexão para usar com relatórios
